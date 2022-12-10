@@ -1,13 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { FpjsProvider } from "@fingerprintjs/fingerprintjs-pro-react";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <FpjsProvider
+      cacheLocation="memory"
+      loadOptions={{
+        apiKey: "jVDe77ago0K9w6LgIoyK",
+      }}
+    >
+      <App />
+    </FpjsProvider>
+    ,
   </React.StrictMode>
 );
 
