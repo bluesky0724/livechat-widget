@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = 'http://192.168.116.62:3001';
 
 export const getIsSubmitted = () => {
     return localStorage.getItem("isSubmitted");
