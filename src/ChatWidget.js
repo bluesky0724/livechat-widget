@@ -34,7 +34,7 @@ import {
 
 function MessageButton() {
   return (
-    <div className="max-w-full absolute bottom-0 z-10 flex items-end will-change-auto p-1 left-0 justify-end w-[84px] h-[84px] bg-transparent">
+    <div className="max-w-full absolute bottom-0 z-10 flex items-end will-change-auto p-1 right-0 justify-end w-[84px] h-[84px] bg-transparent">
       <div className="flex min-w-0">
         <div
           className="flex w-[60px] h-[60px] rounded-full justify-center ml-auto relative bg-[#2000F0]"
@@ -134,7 +134,7 @@ function MessageWindow({ hideWindow, chatHistory }) {
   };
 
   return (
-    <div className="absolute h-[640px] w-[320px] m-2 bottom-0 left-0">
+    <div className="absolute h-[640px] w-[320px] m-2 bottom-0 right-0">
       <div className="relative flex flex-col min-w-0 h-full w-full  overflow-hidden isolate rounded-lg bg-slate-100 ">
         <div className="justify-between w-full relative h-[56px] shrink-0 overflow-hidden flex-grow-0 flex flex-row items-center ">
           <IconButton aria-label="delete">

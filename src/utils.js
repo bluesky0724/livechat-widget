@@ -29,7 +29,7 @@ export const saveMachineId = (machineId) => {
 }
 
 export const getChatHistory = async () => {
-    const adminId = '1234';
+    const adminId = window.__lc.license;
     const machineId = getMachineId();
     const response = await axios.get(`${API_BASE_URL}/api/livechat/chathistory/${adminId}/${machineId}`);
 

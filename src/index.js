@@ -5,7 +5,10 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { FpjsProvider } from "@fingerprintjs/fingerprintjs-pro-react";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+// const widget = document.createElement('div');
+// widget.setAttribute('id', 'mymember-livechat');
+// document.body.appendChild(widget)
+const root = ReactDOM.createRoot(document.getElementById("mymember-livechat"));
 root.render(
   <React.StrictMode>
     <FpjsProvider

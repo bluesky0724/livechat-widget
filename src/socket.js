@@ -12,7 +12,7 @@ socketIo.on("connect", () => {
   console.log("connected to socket server");
   setTimeout(() => {
     socketIo.emit("clientRegister", {
-      adminId: "1234",
+      adminId: window.__lc.license,
       machineId: getMachineId(),
     });    
   }, 500);
@@ -31,7 +31,7 @@ export const SOCKET_CONNECTER_IO = () => {
 export const sendMessage = (message) => {
   socketIo.emit("clientMsgSend", {
     machineId: getMachineId(),
-    adminId: "1234",
+    adminId: window.__lc.license,
     userInfo: getUserInfoFromLocalStorage(),
     msg: message,
   });
@@ -39,7 +39,7 @@ export const sendMessage = (message) => {
 
 export const startChat = (userInfo) => {
   socketIo.emit("startChat", {
-    adminId: 1234,
+    adminId: window.__lc.license,
     machineId: getMachineId(),
     userInfo: userInfo,
   });
