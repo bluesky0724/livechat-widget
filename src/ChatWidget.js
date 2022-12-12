@@ -164,7 +164,7 @@ function MessageWindow({ hideWindow, chatHistory }) {
         </div> */}
         <div className="bg-[#e5e7eb] w-full h-full p-[0.5em] overflow-auto">
           <UserRegister userInfo={userInfo} />
-          {messages.map((item) => {
+          {messages && messages.length > 0 && messages.map((item) => {
             return (
               <MessageRow
                 Name={item.source}
