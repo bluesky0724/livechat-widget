@@ -1,7 +1,7 @@
 import io from "socket.io-client";
 import { getMachineId, getUserInfoFromLocalStorage } from "./utils";
 
-export const socketIo = io("http://192.168.116.62:3001", {
+export const socketIo = io("https://mymember.com", {
   transports: ["websocket"],
   secure: true,
 });
