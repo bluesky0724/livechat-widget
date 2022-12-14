@@ -1,7 +1,7 @@
 import io from "socket.io-client";
-import { getMachineId, getUserInfoFromLocalStorage } from "./utils";
+import { getBrowserInfo, getMachineId, getUserInfoFromLocalStorage } from "./utils";
 
-export const socketIo = io("https://mymember.com", {
+export const socketIo = io("http://localhost:3001", {
   transports: ["websocket"],
   secure: true,
 });
@@ -24,7 +24,6 @@ socketIo.on("connect_error", (err) => {
 });
 
 export const SOCKET_CONNECTER_IO = () => {
-  // alert("My Name is ajay")
   return socketIo;
 };
 
@@ -42,5 +41,28 @@ export const startChat = (userInfo) => {
     adminId: window.__lc.license,
     machineId: getMachineId(),
     userInfo: userInfo,
+    locationInfo: localStorage.getItem("locationInfo"),
+    browserInfo: JSON.stringify(getBrowserInfo()),
   });
 };
+
+export const endChat = () => {
+  socketIo.emit("endChat", {
+    adminId: window.__lc.license,
+    machineId: getMachineId(),
+  });
+}
+
+
+// window.jscd = {
+//   screen: screenSize,
+//   browser: browser,
+//   browserVersion: version,
+//   browserMajorVersion: majorVersion,
+//   mobile: mobile,
+//   os: os,
+//   osVersion: osVersion,
+//   cookies: cookieEnabled,
+//   flashVersion: flashVersion
+// };
+// }

@@ -1,27 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IconButton, Divider, TextField, Button } from "@mui/material";
+import { IconButton, Divider, Button, Modal } from "@mui/material";
 import {
   Minimize,
-  More,
   MoreHoriz,
   PersonOutline,
-  Info,
-  ArrowDownward,
-  KeyboardArrowUpOutlined,
-  KeyboardArrowDown,
-  EmojiEmotions,
   AttachFile,
   Send,
   EmojiEmotionsOutlined,
+  Close,
 } from "@mui/icons-material";
-import {
-  sendMessage,
-  startChat,
-  SOCKET_CONNECTER_IO,
-  getUserInfo,
-} from "./socket";
-
-import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react";
+import { sendMessage, startChat, SOCKET_CONNECTER_IO, endChat } from "./socket";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 import {
@@ -30,7 +18,12 @@ import {
   getMachineId,
   saveMachineId,
   getChatHistory,
+  getLocationInfo,
+  getBrowserInfo,
+  fetchLocationInfo,
 } from "./utils";
+import { Box } from "@mui/system";
+import { Popconfirm } from "antd";
 
 function MessageButton() {
   return (
@@ -70,67 +63,91 @@ function MessageButton() {
   );
 }
 
-function MessageWindow({ hideWindow, chatHistory }) {
+function MessageWindow({ hideWindow }) {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef();
-
+  const [chatHistory, setChatHistory] = useState([]);
   const [userInfo, setUserInfo] = useState({});
+  const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   // Rendering hook functions
-  useEffect(scrollToBottom, [messages]);
+  useEffect(() => {
+    scrollToBottom();
+    console.log(chatHistory.activated);
+  }, [chatHistory]);
   useEffect(() => {
     // set messsages and userinfo from axios
-    if (chatHistory) {
-      setMessages(chatHistory.messages);
-      setUserInfo({ username: chatHistory.username, email: chatHistory.email });
-    }
+    (async () => {
+      const chathistoryResponse = await getChatHistory();
+      setChatHistory(chathistoryResponse);
+      if (chathistoryResponse) {
+        setMessages(chathistoryResponse.messages);
+        setUserInfo({
+          username: chathistoryResponse.username,
+          email: chathistoryResponse.email,
+        });
+      }
+      console.log("activated", chathistoryResponse.activated);
+    })();
 
     setTimeout(() => {
       setUserInfo(getUserInfoFromLocalStorage());
     }, 500);
 
     (async () => {
-      // Socket Receive handler
-      SOCKET_CONNECTER_IO().on("clientMessage", (data) => {
-        console.log("new message", data);
-        addNewMessage(data);
+      SOCKET_CONNECTER_IO().on("adminMsgRev", async (data) => {
+        const chathistoryResponse = await getChatHistory();
+        setChatHistory(chathistoryResponse);
       });
 
-      SOCKET_CONNECTER_IO().on("customerMessage", (data) => {
-        console.log("new message", data);
-
-        addNewMessage(data);
+      SOCKET_CONNECTER_IO().on("clientMsgRev", async (data) => {
+        const chathistoryResponse = await getChatHistory();
+        setChatHistory(chathistoryResponse);
       });
 
-      SOCKET_CONNECTER_IO().on("adminMsgRev", (data) => {
-        addNewMessage({ msg: data, type: "adminMessage" });
-      });
-
-      SOCKET_CONNECTER_IO().on("clientMsgRev", (data) => {
-        addNewMessage({ msg: data, type: "clientMessage" });
-      });
-
-      SOCKET_CONNECTER_IO().on("startChat", (userInfo) => {
+      SOCKET_CONNECTER_IO().on("startChat", async (userInfo) => {
         console.log("startchat request received", userInfo);
         saveUserInfoToLocalStorage(userInfo);
         setUserInfo(userInfo);
+        const chathistoryResponse = await getChatHistory();
+        setChatHistory(chathistoryResponse);
       });
     })();
+
+    SOCKET_CONNECTER_IO().on("endChat", async (userInfo) => {
+      hideWindow();
+    });
 
     return function cleanup() {
       SOCKET_CONNECTER_IO().removeAllListeners();
     };
   }, []);
 
-  const addNewMessage = (message) => {
-    console.log("messges are", messages, message);
-    setMessages((prev) => {
-      return [...prev, message];
-    });
+  // const addNewMessage = (message) => {
+  //   console.log("messges are", messages, message);
+  //   setMessages((prev) => {
+  //     return [...prev, message];
+  //   });
+  // };
+  const modalBoxStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
+
+  const handleEndChat = async () => {
+    endChat();
+    hideWindow();
   };
 
   return (
@@ -143,9 +160,26 @@ function MessageWindow({ hideWindow, chatHistory }) {
           <h1 className="text-[14px] font-[700] text-[#111111]">
             Welcome to LiveChat
           </h1>
-          <IconButton aria-label="delete" onClick={(e) => hideWindow()}>
-            <Minimize />
-          </IconButton>
+          <div className="flex flex-row">
+            <IconButton aria-label="delete" onClick={(e) => hideWindow()}>
+              <Minimize />
+            </IconButton>
+            {chatHistory && chatHistory.activated ? (
+              <Popconfirm
+                title="Are you sure to delete this task?"
+                onConfirm={() => handleEndChat()}
+                okText="Close"
+                cancelText="No"
+                placement="bottomRight"
+              >
+                <IconButton
+                  aria-label="delete"
+                >
+                  <Close />
+                </IconButton>
+              </Popconfirm>
+            ) : null}
+          </div>
         </div>
         <Divider sx={{ margin: "0px 12.8px" }} />
         {/* <div className="flex flex-row flex-grow-0 items-center p-[16px] h-[74px] text-[14px] text-ellipsis text-left">
@@ -162,22 +196,45 @@ function MessageWindow({ hideWindow, chatHistory }) {
             <KeyboardArrowDown />
           </IconButton>
         </div> */}
+
         <div className="bg-[#e5e7eb] w-full h-full p-[0.5em] overflow-auto">
-          <UserRegister userInfo={userInfo} />
-          {messages && messages.length > 0 && messages.map((item) => {
-            return (
-              <MessageRow
-                Name={item.source}
-                sendTime={item.createdAt}
-                message={item.msg}
-                isSend={item.type !== "adminMessage"}
-              />
-            );
-          })}
+          {chatHistory &&
+            chatHistory.messages &&
+            chatHistory.messages.length > 0 &&
+            chatHistory.messages.map((item) => {
+              if (item.type === "PreChatForm") {
+                return <UserRegister userInfo={JSON.parse(item.msg)} />;
+              }
+              return (
+                <MessageRow
+                  Name={item.source}
+                  sendTime={item.createdAt}
+                  message={item.msg}
+                  isSend={item.type !== "adminMessage"}
+                />
+              );
+            })}
+          <div>
+            {chatHistory && !chatHistory.activated && (
+              <UserRegister userInfo={{}} />
+            )}
+          </div>
           <div ref={messagesEndRef} />
         </div>
-        <MessageInputGroup />
+        <MessageInputGroup disabled={!chatHistory.activated} />
+
         <Footer />
+        <Modal
+          disablePortal={true}
+          open={isCloseModalOpen}
+          onClose={(e) => setIsCloseModalOpen(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={modalBoxStyle}>
+            <div>This is sample modal</div>
+          </Box>
+        </Modal>
       </div>
     </div>
   );
@@ -192,8 +249,7 @@ const UserRegister = (props) => {
   const nameRef = useRef();
 
   useEffect(() => {
-    console.log("props userinfo", props.userInfo);
-    if (props.userInfo.email) {
+    if (props.userInfo.email && props.userInfo.username) {
       setEmail(props.userInfo.email);
       setUsername(props.userInfo.username);
       setIsSubmitted(true);
@@ -303,12 +359,13 @@ const MessageInputGroup = (props) => {
             ref={messageRef}
             className="pl-[1.25em] pr-[7.75em] pt-[1.25em] pb-[1em] text-[14px] focus:outline-none border-t-gray-200 border-solid border-[1px]"
             placeholder="Write a message..."
+            disabled={props.disabled}
           />
           <div className="absolute right-[1rem] text-[#111111]">
-            <button>
+            <button onClick={(e) => console.log("emoji")}>
               <EmojiEmotionsOutlined />
             </button>
-            <button>
+            <button onClick={(e) => console.log("attach")}>
               <AttachFile />
             </button>
             <button type="submit">
@@ -386,16 +443,28 @@ export default function ChatWidget() {
         console.log("machineId is ", result.visitorId);
       });
 
+    (async () => {
+      await fetchLocationInfo();
+    })();
+
+    const browserInfo = getBrowserInfo();
+    console.log(browserInfo);
     setTimeout(async () => {
       const chathistoryResponse = await getChatHistory();
       setChatHistory(chathistoryResponse);
     }, 500);
   }, []);
 
+  const openWindow = async () => {
+    const chathistoryResponse = await getChatHistory();
+    setChatHistory(chathistoryResponse);
+    setOpen(true);
+  };
+
   return (
     <div>
       {!open && (
-        <div onClick={() => setOpen(true)}>
+        <div onClick={() => openWindow()}>
           <MessageButton />
         </div>
       )}
