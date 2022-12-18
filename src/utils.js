@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = 'https://mymember.com';
 
 export const getIsSubmitted = () => {
     return localStorage.getItem("isSubmitted");
@@ -48,7 +48,6 @@ export const getChatHistory = async () => {
 export const fetchLocationInfo = async () => {
     try {
         const response = await axios.get('https://api.db-ip.com/v2/free/self');
-        console.log(response.data);
         localStorage.setItem("locationInfo", JSON.stringify(response.data));
     }
     catch(err){
@@ -247,5 +246,16 @@ export const getBrowserInfo = () => {
       osVersion: osVersion,
       cookies: cookieEnabled,
       // flashVersion: flashVersion
+    }
+  }
+
+  export const loadThemeSetting = async () => {
+    try {
+        const adminId = window.__lc.license;
+        const response = await axios.get(`http://localhost:3001/api/livechat/setting/${adminId}`);
+        return response.data;
+    }
+    catch(e) {
+        console.log(e);
     }
   }

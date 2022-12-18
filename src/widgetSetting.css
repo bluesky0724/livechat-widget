@@ -1,0 +1,19 @@
+.accordionHeader {
+    height: 60px;
+    padding: 16px 17px;
+    border-radius: 4px;
+    border-color: #e4e8ec;
+    border: 1px solid;
+}
+
+.accordionHeader:focus {
+    border-color: #4379D6;
+}
+
+
+
+.accordionHeader{
+    font-weight: 600;
+    color: #424D57;
+    font-size: 24px;
+}

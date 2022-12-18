@@ -104,7 +104,7 @@ const MessageInput = (props) => {
             <div className={classes.rightButtonGroupWrapper}>
               <div className={classes.statusChange}>
                 <span className={classes.ticketStatusSpan}>Ticket Status</span>
-                <Select size="small">
+                <Select id="ppp" size="small">
                   <MenuItem value={10}>Open</MenuItem>
                   <MenuItem value={20}>Pending</MenuItem>
                   <MenuItem value={30}>Spam</MenuItem>

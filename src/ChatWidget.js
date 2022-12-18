@@ -24,40 +24,84 @@ import {
 } from "./utils";
 import { Box } from "@mui/system";
 import { Popconfirm } from "antd";
+import { useTheme } from "@emotion/react";
 
 function MessageButton() {
+  const theme = useTheme();
+  const style = theme.status.minimized;
+  const alignTo = theme.status.alignTo;
+  const themeColor = theme.status.themeColor;
+  const sideSpacing = theme.status.sideSpacing;
+  const bottomsSpacing = theme.status.bottomSpacing;
+  console.log("bottom spacing is ", bottomsSpacing);
+  const alignStyle = alignTo === "right" ? {
+    bottom: `${bottomsSpacing}px`,
+    right: `${sideSpacing}px`
+  }: {
+    bottom: `${bottomsSpacing}px`,
+    left: `${sideSpacing}px`,
+  }
   return (
-    <div className="max-w-full absolute bottom-0 z-10 flex items-end will-change-auto p-1 right-0 justify-end w-[84px] h-[84px] bg-transparent">
+    <div style={alignStyle} className={`max-w-full absolute bottom-[${bottomsSpacing}px] z-10 flex items-end will-change-auto p-1 ${alignTo}-[${sideSpacing}px] justify-end bg-transparent cursor-pointer`}>
       <div className="flex min-w-0">
-        <div
-          className="flex w-[60px] h-[60px] rounded-full justify-center ml-auto relative bg-[#2000F0]"
-          style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.3)" }}
-        >
-          <button
-            type="button"
-            className="text-white bg-transparent  font-medium rounded-lg text-sm text-center inline-flex items-center dark:focus:ring-[#1da1f2]/55 "
+        {style === "bubble" ? (
+          <div
+            className={`flex w-[60px] h-[60px] rounded-full justify-center ml-auto relative bg-[${themeColor}]`}
+            style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.3)" }}
           >
-            <svg
-              viewBox="0 0 32 32"
-              className=" w-8 h-8"
-              aria-hidden="true"
-              focusable="false"
-              data-prefix="fab"
-              data-icon="twitter"
-              role="img"
-              xmlns="http://www.w3.org/2000/svg"
+            <button
+              type="button"
+              className="text-white bg-transparent  font-medium rounded-lg text-sm text-center inline-flex items-center dark:focus:ring-[#1da1f2]/55 "
             >
-              <path
-                fill="#FFFFFF"
-                d="M12.63,26.46H8.83a6.61,6.61,0,0,1-6.65-6.07,89.05,89.05,0,0,1,0-11.2A6.5,6.5,0,0,1,8.23,3.25a121.62,121.62,0,0,1,15.51,0A6.51,6.51,0,0,1,29.8,9.19a77.53,77.53,0,0,1,0,11.2,6.61,6.61,0,0,1-6.66,6.07H19.48L12.63,31V26.46"
-              ></path>
-              <path
-                fill="#2000F0"
-                d="M19.57,21.68h3.67a2.08,2.08,0,0,0,2.11-1.81,89.86,89.86,0,0,0,0-10.38,1.9,1.9,0,0,0-1.84-1.74,113.15,113.15,0,0,0-15,0A1.9,1.9,0,0,0,6.71,9.49a74.92,74.92,0,0,0-.06,10.38,2,2,0,0,0,2.1,1.81h3.81V26.5Z"
-              ></path>
-            </svg>
-          </button>
-        </div>
+              <svg
+                viewBox="0 0 32 32"
+                className=" w-8 h-8"
+                aria-hidden="true"
+                focusable="false"
+                data-prefix="fab"
+                data-icon="twitter"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill="#FFFFFF"
+                  d="M12.63,26.46H8.83a6.61,6.61,0,0,1-6.65-6.07,89.05,89.05,0,0,1,0-11.2A6.5,6.5,0,0,1,8.23,3.25a121.62,121.62,0,0,1,15.51,0A6.51,6.51,0,0,1,29.8,9.19a77.53,77.53,0,0,1,0,11.2,6.61,6.61,0,0,1-6.66,6.07H19.48L12.63,31V26.46"
+                ></path>
+                <path
+                  fill={themeColor}
+                  d="M19.57,21.68h3.67a2.08,2.08,0,0,0,2.11-1.81,89.86,89.86,0,0,0,0-10.38,1.9,1.9,0,0,0-1.84-1.74,113.15,113.15,0,0,0-15,0A1.9,1.9,0,0,0,6.71,9.49a74.92,74.92,0,0,0-.06,10.38,2,2,0,0,0,2.1,1.81h3.81V26.5Z"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        ) : (
+          <div className={`bg-[${themeColor}] w-[320px] h-[40px] rounded-t-md text-white font-[600] px-[0.9em]`}>
+            <div className="flex flex-row justify-between items-center pt-2 ">
+              <div className="text-[16px]">Chat with agent</div>
+              <div>
+                <svg
+                  viewBox="0 0 32 32"
+                  className=" w-6 h-6"
+                  aria-hidden="true"
+                  focusable="false"
+                  data-prefix="fab"
+                  data-icon="twitter"
+                  role="img"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="#FFFFFF"
+                    d="M12.63,26.46H8.83a6.61,6.61,0,0,1-6.65-6.07,89.05,89.05,0,0,1,0-11.2A6.5,6.5,0,0,1,8.23,3.25a121.62,121.62,0,0,1,15.51,0A6.51,6.51,0,0,1,29.8,9.19a77.53,77.53,0,0,1,0,11.2,6.61,6.61,0,0,1-6.66,6.07H19.48L12.63,31V26.46"
+                  ></path>
+                  <path
+                    fill={themeColor}
+                    d="M19.57,21.68h3.67a2.08,2.08,0,0,0,2.11-1.81,89.86,89.86,0,0,0,0-10.38,1.9,1.9,0,0,0-1.84-1.74,113.15,113.15,0,0,0-15,0A1.9,1.9,0,0,0,6.71,9.49a74.92,74.92,0,0,0-.06,10.38,2,2,0,0,0,2.1,1.81h3.81V26.5Z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -77,7 +121,6 @@ function MessageWindow({ hideWindow }) {
   // Rendering hook functions
   useEffect(() => {
     scrollToBottom();
-    console.log(chatHistory.activated);
   }, [chatHistory]);
   useEffect(() => {
     // set messsages and userinfo from axios
@@ -91,7 +134,6 @@ function MessageWindow({ hideWindow }) {
           email: chathistoryResponse.email,
         });
       }
-      console.log("activated", chathistoryResponse.activated);
     })();
 
     setTimeout(() => {
@@ -150,14 +192,25 @@ function MessageWindow({ hideWindow }) {
     hideWindow();
   };
 
+  const theme = useTheme();
+  const darkmode = theme.palette.mode;
+  const alignTo = theme.status.alignTo;
+  const themeColor = theme.status.themeColor;
+  const sideSpacing = theme.status.sideSpacing;
+  const bottomSpacing = theme.status.bottomSpacing;
+
   return (
-    <div className="absolute h-[640px] w-[320px] m-2 bottom-0 right-0">
-      <div className="relative flex flex-col min-w-0 h-full w-full  overflow-hidden isolate rounded-lg bg-slate-100 ">
+    <div
+      className={
+        `absolute h-[640px] w-[320px] m-2 bottom-[${bottomSpacing}px] ${alignTo}-[${sideSpacing}px] ` + darkmode
+      }
+    >
+      <div className={`relative flex flex-col min-w-0 h-full w-full  overflow-hidden isolate rounded-lg bg-[${themeColor}] `}>
         <div className="justify-between w-full relative h-[56px] shrink-0 overflow-hidden flex-grow-0 flex flex-row items-center ">
           <IconButton aria-label="delete">
             <MoreHoriz />
           </IconButton>
-          <h1 className="text-[14px] font-[700] text-[#111111]">
+          <h1 className="text-[14px] font-[700] text-gray-800 dark:text-gray-100">
             Welcome to LiveChat
           </h1>
           <div className="flex flex-row">
@@ -172,9 +225,7 @@ function MessageWindow({ hideWindow }) {
                 cancelText="No"
                 placement="bottomRight"
               >
-                <IconButton
-                  aria-label="delete"
-                >
+                <IconButton aria-label="delete">
                   <Close />
                 </IconButton>
               </Popconfirm>
@@ -197,7 +248,7 @@ function MessageWindow({ hideWindow }) {
           </IconButton>
         </div> */}
 
-        <div className="bg-[#e5e7eb] w-full h-full p-[0.5em] overflow-auto">
+        <div className="bg-[#e5e7eb] dark:bg-gray-800 dark:text-gray-100 w-full h-full p-[0.5em] overflow-auto">
           {chatHistory &&
             chatHistory.messages &&
             chatHistory.messages.length > 0 &&
@@ -205,10 +256,12 @@ function MessageWindow({ hideWindow }) {
               if (item.type === "PreChatForm") {
                 return <UserRegister userInfo={JSON.parse(item.msg)} />;
               }
+              const sendTime = new Date(item.createdAt);
+              const dispaySendTime = sendTime.getHours() + ":" + sendTime.getMinutes();
               return (
                 <MessageRow
-                  Name={item.source}
-                  sendTime={item.createdAt}
+                  Name={item.type === "adminMessage" ? "Agent" : "You"}
+                  sendTime={dispaySendTime}
                   message={item.msg}
                   isSend={item.type !== "adminMessage"}
                 />
@@ -269,8 +322,9 @@ const UserRegister = (props) => {
     setIsSubmitted(true);
   }, []);
 
+
   return (
-    <div className="mt-[21px] rounded-[6px] bg-white p-4 m-2">
+    <div className="mt-[21px] rounded-[6px] bg-white p-4 m-2 dark:bg-gray-700">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -279,7 +333,7 @@ const UserRegister = (props) => {
       >
         <PersonOutline
           sx={{ width: "42px", height: "42px" }}
-          className="mt-[-37px] rounded-full bg-[#1565c0] text-white p-[5px]"
+          className={`mt-[-37px] rounded-full bg-[${useTheme().status.themeColor}] text-white p-[5px]`}
         />
         {isSubmitted ? null : (
           <div className="text-start text-[14px]">
@@ -342,7 +396,6 @@ const MessageInputGroup = (props) => {
   // }
 
   const handleSubmit = () => {
-    console.log("sended message");
     sendMessage(messageRef.current.value);
     messageRef.current.value = "";
   };
@@ -354,14 +407,14 @@ const MessageInputGroup = (props) => {
           handleSubmit();
         }}
       >
-        <div className="relative flex flex-row items-center ">
+        <div className="relative flex flex-row items-center dark:text-gray-100">
           <input
             ref={messageRef}
-            className="pl-[1.25em] pr-[7.75em] pt-[1.25em] pb-[1em] text-[14px] focus:outline-none border-t-gray-200 border-solid border-[1px]"
+            className="w-full pl-[1.25em] pr-[7.75em] pt-[1.25em] pb-[1em] text-[14px] focus:outline-none border-t-gray-200 border-solid border-t-[1px] dark:bg-gray-800 dark:border-t-gray-700"
             placeholder="Write a message..."
             disabled={props.disabled}
           />
-          <div className="absolute right-[1rem] text-[#111111]">
+          <div className="absolute right-[1rem] text-[#111111] dark:text-gray-100">
             <button onClick={(e) => console.log("emoji")}>
               <EmojiEmotionsOutlined />
             </button>
@@ -380,7 +433,7 @@ const MessageInputGroup = (props) => {
 
 const Footer = () => {
   return (
-    <div className="text-[12px] p-1">
+    <div className="text-[12px] p-1 dark:text-gray-100">
       Powered by{" "}
       <a href="#" className="font-bold">
         Mymember.com
@@ -391,13 +444,14 @@ const Footer = () => {
 
 const MessageTemplate = (props) => {
   const orientation = props.isSend ? "items-end" : "items-start";
+  const theme = useTheme();
   const messageBack = props.isSend
-    ? "bg-[#1565c0] text-white "
-    : "bg-white text-black ";
+    ? `bg-[${theme.status.themeColor}] text-white `
+    : "bg-white text-black dark:bg-gray-700 dark:text-gray-100";
   return (
     <div className={"flex flex-col " + orientation}>
-      <div className="text-[0.8em] text-[#707070]">
-        {props.Name + props.sendTime}
+      <div className="text-[0.8em] text-[#707070] dark:text-gray-300">
+        {props.Name + "  " + props.sendTime}
       </div>
       <div
         className={
@@ -408,7 +462,9 @@ const MessageTemplate = (props) => {
         {props.message}
       </div>
       {props.isSend ? (
-        <div className="text-[0.8em] text-[#707070]">Delivered</div>
+        <div className="text-[0.8em] text-[#707070] dark:text-gray-300">
+          Delivered
+        </div>
       ) : null}
     </div>
   );
@@ -439,8 +495,6 @@ export default function ChatWidget() {
       .then((result) => {
         setVisitorId(result.visitorId);
         saveMachineId(result.visitorId);
-        console.log("result", result);
-        console.log("machineId is ", result.visitorId);
       });
 
     (async () => {
@@ -448,7 +502,6 @@ export default function ChatWidget() {
     })();
 
     const browserInfo = getBrowserInfo();
-    console.log(browserInfo);
     setTimeout(async () => {
       const chathistoryResponse = await getChatHistory();
       setChatHistory(chathistoryResponse);
