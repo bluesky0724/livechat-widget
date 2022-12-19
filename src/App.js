@@ -32,15 +32,15 @@ function App() {
     console.log("themesetting is", themeSetting);
     return createTheme({
       palette: {
-        mode: themeSetting.theme,
+        mode: themeSetting?.theme,
       },
       status: {
-        maximized: themeSetting.maximized ? themeSetting.maximized : "smooth",
-        minimized: themeSetting.minimized ? themeSetting.minimized : "bubble",
-        themeColor: themeSetting.themeColor ? themeSetting.themeColor : "#1565C0",
-        alignTo: themeSetting.alignTo ? themeSetting.alignTo : "right",
-        sideSpacing: themeSetting.sideSpacing ? themeSetting.sideSpacing : 10,
-        bottomSpacing: themeSetting.bottomSpacing ? themeSetting.bottomSpacing : 10,
+        maximized: themeSetting?.maximized ? themeSetting?.maximized : "smooth",
+        minimized: themeSetting?.minimized ? themeSetting?.minimized : "bubble",
+        themeColor: themeSetting?.themeColor ? themeSetting?.themeColor : "#1565C0",
+        alignTo: themeSetting?.alignTo ? themeSetting?.alignTo : "right",
+        sideSpacing: themeSetting?.sideSpacing ? themeSetting?.sideSpacing : 10,
+        bottomSpacing: themeSetting?.bottomSpacing ? themeSetting?.bottomSpacing : 10,
       }
     })
   }, [themeSetting]);
