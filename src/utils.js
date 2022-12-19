@@ -252,7 +252,7 @@ export const getBrowserInfo = () => {
   export const loadThemeSetting = async () => {
     try {
         const adminId = window.__lc.license;
-        const response = await axios.get(`http://localhost:3001/api/livechat/setting/${adminId}`);
+        const response = await axios.get(`https://mymember.com/api/livechat/setting/${adminId}`);
         return response.data;
     }
     catch(e) {

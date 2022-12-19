@@ -210,7 +210,7 @@ function MessageWindow({ hideWindow }) {
           <IconButton aria-label="delete">
             <MoreHoriz />
           </IconButton>
-          <h1 className="text-[14px] font-[700] text-gray-800 dark:text-gray-100">
+          <h1 className="text-[14px] font-[700] text-gray-100">
             Welcome to LiveChat
           </h1>
           <div className="flex flex-row">
@@ -433,7 +433,7 @@ const MessageInputGroup = (props) => {
 
 const Footer = () => {
   return (
-    <div className="text-[12px] p-1 dark:text-gray-100">
+    <div className="text-[12px] p-1 text-gray-100">
       Powered by{" "}
       <a href="#" className="font-bold">
         Mymember.com
